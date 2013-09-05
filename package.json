@@ -1,0 +1,34 @@
+{
+  "name": "rework-npm",
+  "version": "0.0.1",
+  "description": "Import CSS from npm modules using rework",
+  "main": "index.js",
+  "scripts": {
+    "test": "tap test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/conradz/rework-npm.git"
+  },
+  "keywords": [
+    "rework",
+    "css",
+    "style",
+    "import",
+    "npm",
+    "modules"
+  ],
+  "author": "Conrad Zimmerman <me@conradz.com>",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/conradz/rework-npm/issues"
+  },
+  "devDependencies": {
+    "rework": "~0.18.1",
+    "tap": "~0.4.4"
+  },
+  "dependencies": {
+    "resolve": "~0.5.0",
+    "css": "~1.4.1"
+  }
+}

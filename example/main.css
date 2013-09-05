@@ -1,0 +1,10 @@
+/* Ignore absolute URLs */
+@import "http://example.com/example.css";
+
+@import "my-css";
+@import "example";
+@import "./other";
+
+.main {
+    content: "From main.css";
+}

@@ -1,0 +1,23 @@
+/* Ignore absolute URLs */
+
+@import "http://example.com/example.css";
+
+.my-css {
+  content: "From node_modules/my-css/test.css";
+}
+
+.my-css {
+  content: "From node_modules/example/node_modules/my-css/index.css";
+}
+
+.example {
+  content: "From node_modules/example/index.css";
+}
+
+.other {
+  content: "From other.css";
+}
+
+.main {
+  content: "From main.css";
+}
