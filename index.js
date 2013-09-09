@@ -7,7 +7,7 @@ module.exports = reworkNPM;
 
 function reworkNPM(dir) {
     return function(style) {
-        style.rules = resolveImports(dir, style);
+        style.rules = resolveImports([], dir, style);
         return style;
     };
 }
@@ -17,7 +17,7 @@ function isNpmImport(path) {
     return !/:\/\//.test(path);
 }
 
-function resolveImports(dir, style) {
+function resolveImports(included, dir, style) {
     dir = dir || process.cwd();
     dir = path.resolve(dir);
 
@@ -26,17 +26,18 @@ function resolveImports(dir, style) {
         if (rule.type !== 'import') {
             processed.push(rule);
         } else {
-            processed = processed.concat(getImport(dir, rule));
+            var imported = getImport(included, dir, rule);
+            processed = processed.concat(imported);
         }
     });
 
     return processed;
 }
 
-function getImport(dir, rule) {
+function resolveImport(dir, rule) {
     var name = rule.import.replace(/^\"|\"$/g, '');
     if (!isNpmImport(name)) {
-        return [rule];
+        return null;
     }
 
     var options = {
@@ -45,13 +46,29 @@ function getImport(dir, rule) {
         packageFilter: processPackage
     };
 
-    var file = resolve.sync(name, options),
-        importDir = path.dirname(file),
+    var file = resolve.sync(name, options);
+    return path.normalize(file);
+}
+
+function getImport(included, dir, rule) {
+    var file = resolveImport(dir, rule);
+    if (!file) {
+        return [rule];
+    }
+
+    // Only include a file once
+    if (included.indexOf(file) !== -1) {
+        return [];
+    }
+
+    included.push(file);
+
+    var importDir = path.dirname(file),
         contents = fs.readFileSync(file, 'utf8'),
         styles = css.parse(contents).stylesheet;
 
     // Resolve imports in the imported file
-    return resolveImports(importDir, styles);
+    return resolveImports(included, importDir, styles);
 }
 
 function processPackage(package) {

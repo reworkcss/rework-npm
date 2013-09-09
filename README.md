@@ -14,6 +14,9 @@ Node. Specify the CSS file for a module using the `style` field in
 module, like `@import "my-module/my-file";`. You can also require files relative
 to the current file using `@import "./my-file";`.
 
+Note that files will only be imported once. If a file was previously imported,
+the `@import` for that file will be ignored after being imported the first time.
+
 ## Example
 
 ```js
