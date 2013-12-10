@@ -14,8 +14,13 @@ Node. Specify the CSS file for a module using the `style` field in
 module, like `@import "my-module/my-file";`. You can also require files relative
 to the current file using `@import "./my-file";`.
 
-Note that files will only be imported once. If a file was previously imported,
-the `@import` for that file will be ignored after being imported the first time.
+An `@import` will be processed so that the file referenced will have been
+imported in the current scope at the point of the `@import`. If a file has been
+previously imported in the current scope, that file will not be imported again.
+New scopes are created in a block such as a `@media` block. Child blocks will
+not duplicate imports that have been imported in the parent block, but may
+duplicate imports that are imported in a sibling block (since they may not have
+effect otherwise).
 
 ## Example
 

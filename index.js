@@ -10,7 +10,7 @@ module.exports = reworkNPM;
 
 function reworkNPM(dir) {
     return function(style) {
-        style.rules = resolveImports([], dir, style);
+        resolveImports({}, dir, style);
         return style;
     };
 }
@@ -20,21 +20,27 @@ function isNpmImport(path) {
     return !ABS_URL.test(path);
 }
 
-function resolveImports(included, dir, style) {
+function resolveImports(scope, dir, style) {
     dir = dir || process.cwd();
     dir = path.resolve(dir);
 
-    var processed = [];
+    var output = [];
     style.rules.forEach(function(rule) {
-        if (rule.type !== 'import') {
-            processed.push(rule);
+        if (rule.type === 'import') {
+            var imported = getImport(scope, dir, rule);
+            output = output.concat(imported);
         } else {
-            var imported = getImport(included, dir, rule);
-            processed = processed.concat(imported);
+            output.push(rule);
+        }
+
+        if (rule.rules) {
+            // Create child scope for blocks (such as @media)
+            var childScope = { __parent__: scope };
+            resolveImports(childScope, dir, rule);
         }
     });
 
-    return processed;
+    style.rules = output;
 }
 
 function resolveImport(dir, rule) {
@@ -53,28 +59,38 @@ function resolveImport(dir, rule) {
     return path.normalize(file);
 }
 
-function getImport(included, dir, rule) {
+function getImport(scope, dir, rule) {
     var file = resolveImport(dir, rule);
     if (!file) {
         return [rule];
     }
 
     // Only include a file once
-    if (included.indexOf(file) !== -1) {
+    if (isImported(scope, file)) {
         return [];
     }
 
-    included.push(file);
+    scope[file] = true;
 
     var importDir = path.dirname(file),
         contents = fs.readFileSync(file, 'utf8'),
         styles = css.parse(contents).stylesheet;
 
     // Resolve imports in the imported file
-    return resolveImports(included, importDir, styles);
+    resolveImports(scope, importDir, styles);
+    return styles.rules;
 }
 
 function processPackage(package) {
     package.main = package.style || 'index.css';
     return package;
+}
+
+function hasOwn(obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+function isImported(scope, name) {
+    return (hasOwn(scope, name)
+        || (scope.__parent__ && isImported(scope.__parent__, name)));
 }

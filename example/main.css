@@ -8,3 +8,12 @@
 .main {
     content: "From main.css";
 }
+
+@media (max-width: 640px) {
+    @import "./other";
+    @import "./large";
+}
+
+@media (max-width: 1024px) {
+    @import "./large";
+}
