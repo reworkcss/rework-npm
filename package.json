@@ -28,7 +28,7 @@
     "tap": "~0.4.4"
   },
   "dependencies": {
-    "resolve": "~0.5.0",
+    "resolve": "~0.6.1",
     "css": "~1.4.1"
   }
 }
