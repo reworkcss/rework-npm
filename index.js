@@ -3,6 +3,9 @@ var resolve = require('resolve'),
     css = require('css'),
     fs = require('fs');
 
+var ABS_URL = /:\/\//,
+    QUOTED = /^\"|\"$/g;
+
 module.exports = reworkNPM;
 
 function reworkNPM(dir) {
@@ -14,7 +17,7 @@ function reworkNPM(dir) {
 
 function isNpmImport(path) {
     // Do not import absolute URLs */
-    return !/:\/\//.test(path);
+    return !ABS_URL.test(path);
 }
 
 function resolveImports(included, dir, style) {
@@ -35,7 +38,7 @@ function resolveImports(included, dir, style) {
 }
 
 function resolveImport(dir, rule) {
-    var name = rule.import.replace(/^\"|\"$/g, '');
+    var name = rule.import.replace(QUOTED, '');
     if (!isNpmImport(name)) {
         return null;
     }
