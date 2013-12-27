@@ -9,8 +9,11 @@ var ABS_URL = /^url\(|:\/\//,
 module.exports = reworkNPM;
 
 function reworkNPM(dir) {
+    dir = path.resolve(dir || process.cwd());
+    var opts = { root: dir, dir: dir };
+
     return function(style) {
-        resolveImports({}, dir, style);
+        resolveImports({}, opts, style);
         return style;
     };
 }
@@ -20,14 +23,11 @@ function isNpmImport(path) {
     return !ABS_URL.test(path);
 }
 
-function resolveImports(scope, dir, style) {
-    dir = dir || process.cwd();
-    dir = path.resolve(dir);
-
+function resolveImports(scope, opts, style) {
     var output = [];
     style.rules.forEach(function(rule) {
         if (rule.type === 'import') {
-            var imported = getImport(scope, dir, rule);
+            var imported = getImport(scope, opts, rule);
             output = output.concat(imported);
         } else {
             output.push(rule);
@@ -36,7 +36,7 @@ function resolveImports(scope, dir, style) {
         if (rule.rules) {
             // Create child scope for blocks (such as @media)
             var childScope = { __parent__: scope };
-            resolveImports(childScope, dir, rule);
+            resolveImports(childScope, opts, rule);
         }
     });
 
@@ -59,8 +59,8 @@ function resolveImport(dir, rule) {
     return path.normalize(file);
 }
 
-function getImport(scope, dir, rule) {
-    var file = resolveImport(dir, rule);
+function getImport(scope, opts, rule) {
+    var file = resolveImport(opts.dir, rule);
     if (!file) {
         return [rule];
     }
@@ -73,14 +73,15 @@ function getImport(scope, dir, rule) {
     scope[file] = true;
 
     var importDir = path.dirname(file),
+        importOpts = { dir: importDir, root: opts.root },
         contents = fs.readFileSync(file, 'utf8'),
         styles = parse(contents, {
                 position: true,
-                source: path.relative(dir, file)
+                source: path.relative(opts.root, file)
             }).stylesheet;
 
     // Resolve imports in the imported file
-    resolveImports(scope, importDir, styles);
+    resolveImports(scope, importOpts, styles);
     return styles.rules;
 }
 
