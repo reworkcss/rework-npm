@@ -74,7 +74,10 @@ function getImport(scope, dir, rule) {
 
     var importDir = path.dirname(file),
         contents = fs.readFileSync(file, 'utf8'),
-        styles = parse(contents).stylesheet;
+        styles = parse(contents, {
+                position: true,
+                source: path.relative(dir, file)
+            }).stylesheet;
 
     // Resolve imports in the imported file
     resolveImports(scope, importDir, styles);
