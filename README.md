@@ -42,8 +42,16 @@ console.log(output);
 
 ## Reference
 
-### `reworkNPM([dir])`
+### `reworkNPM([opts])`
 
-Creates a new plugin for rework that will import files from NPM. `dir` is the
-directory of the source file. The current working directory will be used if no
-directory is provided.
+Creates a new plugin for rework that will import files from NPM.
+
+If `opts` is a string, it is used as the `dir` option.
+
+Valid options:
+
+ * `dir`: The directory where the source file is located. If not specified, it
+   uses the current directory.
+ * `root`: The directory where all source files are located. This is used for
+   source maps. All imported files will have file paths relative to this
+   directory in the source maps. By default this uses the `dir` option.

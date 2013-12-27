@@ -8,9 +8,14 @@ var ABS_URL = /^url\(|:\/\//,
 
 module.exports = reworkNPM;
 
-function reworkNPM(dir) {
-    dir = path.resolve(dir || process.cwd());
-    var opts = { root: dir, dir: dir };
+function reworkNPM(opts) {
+    opts = opts || {};
+    if (typeof opts === 'string') {
+        opts = { dir: opts };
+    }
+
+    opts.dir = path.resolve(opts.dir || process.cwd());
+    opts.root = opts.root || opts.dir;
 
     return function(style) {
         resolveImports({}, opts, style);
