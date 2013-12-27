@@ -25,6 +25,13 @@ test('Import package with custom style file', function(t) {
     t.end();
 });
 
+test('Import files imported from imported package', function(t) {
+    var source = '@import "nested";',
+        output = rework(source).use(reworkNPM('test')).toString();
+    t.equal(output, '.test {\n  content: "From nested test package";\n}');
+    t.end();
+});
+
 test('Import package in @media', function(t) {
     var source = [
         '@media (min-width: 320px) {',
