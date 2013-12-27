@@ -3,7 +3,7 @@ var resolve = require('resolve'),
     parse = require('css-parse'),
     fs = require('fs');
 
-var ABS_URL = /:\/\//,
+var ABS_URL = /^url\(|:\/\//,
     QUOTED = /^\"|\"$/g;
 
 module.exports = reworkNPM;

@@ -78,6 +78,13 @@ test('Skip absolute URLs', function(t) {
     t.end();
 });
 
+test('Skip imports using url()', function(t) {
+    var source = '@import url(test.css);',
+        output = rework(source).use(reworkNPM()).toString();
+    t.equal(output, source);
+    t.end();
+});
+
 test('Include source maps', function(t) {
     var source = '@import "test";',
         output = rework(source)
