@@ -22,6 +22,11 @@ not duplicate imports that have been imported in the parent block, but may
 duplicate imports that are imported in a sibling block (since they may not have
 effect otherwise).
 
+You can use source maps to show which file a definition originated from when
+debugging in a browser. To include inline source maps, use
+`.toString({ sourcemap: true })` on the rework object when generating the
+output.
+
 ## Example
 
 ```js
