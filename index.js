@@ -1,6 +1,6 @@
 var resolve = require('resolve'),
     path = require('path'),
-    css = require('css'),
+    parse = require('css-parse'),
     fs = require('fs');
 
 var ABS_URL = /:\/\//,
@@ -74,7 +74,7 @@ function getImport(scope, dir, rule) {
 
     var importDir = path.dirname(file),
         contents = fs.readFileSync(file, 'utf8'),
-        styles = css.parse(contents).stylesheet;
+        styles = parse(contents).stylesheet;
 
     // Resolve imports in the imported file
     resolveImports(scope, importDir, styles);
