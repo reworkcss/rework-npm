@@ -1,7 +1,8 @@
 var test = require('tap').test,
     fs = require('fs'),
     rework = require('rework'),
-    reworkNPM = require('./');
+    reworkNPM = require('./'),
+    normalize = require('path').normalize;
 
 test('Import relative source file', function(t) {
     var source = '@import "./test";',
@@ -97,5 +98,29 @@ test('Include source maps', function(t) {
         'CJmaWxlIjoiZ2VuZXJhdGVkLmNzcyIsInNvdXJjZXMiOlsibm9kZV9tb2R1bGVzL3Rl' +
         'c3QvaW5kZXguY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksdUJ' +
         'BQXVCIn0= */');
+    t.end();
+});
+
+test('Include source file names in output', function(t) {
+    var source = '@import "test";',
+        output = rework(source)
+            .use(reworkNPM('test'));
+
+    var rule = output.obj.stylesheet.rules[0];
+    t.equal(
+        normalize(rule.position.source),
+        normalize('node_modules/test/index.css'));
+    t.end();
+});
+
+test('Use file names relative to root', function(t) {
+    var source = '@import "test";',
+        output = rework(source)
+            .use(reworkNPM({ root: __dirname, dir: 'test' }));
+
+    var rule = output.obj.stylesheet.rules[0];
+    t.equal(
+        normalize(rule.position.source),
+        normalize('test/node_modules/test/index.css'));
     t.end();
 });
