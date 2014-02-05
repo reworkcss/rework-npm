@@ -134,12 +134,11 @@ test('Use file names relative to root', function(t) {
 
 test('Use shim config option', function(t) {
     var source = '@import "shimmed";',
-        cfg = {
-            root: __dirname,
-            dir: 'test',
-            shim: {'shimmed': 'some/path/shimmed.css'}
-        },
-        output = rework(source).use(reworkNPM(cfg)).toString();
+        shim = { 'shimmed': 'some/path/shimmed.css' },
+        output = rework(source)
+            .use(reworkNPM({ root: __dirname, dir: 'test', shim: shim }))
+            .toString();
+
     t.equal(output, '.shimmed {\n  content: "Shimmed package";\n}');
     t.end();
 });
