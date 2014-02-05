@@ -48,16 +48,17 @@ function resolveImports(scope, opts, style) {
     style.rules = output;
 }
 
-function resolveImport(dir, rule) {
-    var name = rule.import.replace(QUOTED, '');
+function resolveImport(opts, rule) {
+    var name = rule.import.replace(QUOTED, ''),
+        shimPath = opts.shim ? opts.shim[name] : null;
     if (!isNpmImport(name)) {
         return null;
     }
 
     var options = {
-        basedir: dir,
+        basedir: opts.dir,
         extensions: ['.css'],
-        packageFilter: processPackage
+        packageFilter: processPackage(shimPath)
     };
 
     var file = resolve.sync(name, options);
@@ -65,7 +66,7 @@ function resolveImport(dir, rule) {
 }
 
 function getImport(scope, opts, rule) {
-    var file = resolveImport(opts.dir, rule);
+    var file = resolveImport(opts, rule);
     if (!file) {
         return [rule];
     }
@@ -90,9 +91,11 @@ function getImport(scope, opts, rule) {
     return styles.rules;
 }
 
-function processPackage(package) {
-    package.main = package.style || 'index.css';
-    return package;
+function processPackage(shimPath) {
+    return function (package) {
+        package.main = shimPath || package.style || 'index.css';
+        return package;
+    }
 }
 
 function hasOwn(obj, prop) {
