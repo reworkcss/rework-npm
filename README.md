@@ -61,3 +61,4 @@ Valid options:
    hash whose keys are the names of packages to shim and whose values are the
    path, relative to that package's `package.json` file, where styles can be
    found. Example: `shim: {'leaflet': 'dist/leaflet.css'}`
+  * `alias`: You can provide aliases for arbitrary file paths using the same format as the `shim` option. `alias: {'tree': './deep/tree/index.css'}`
