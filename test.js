@@ -134,7 +134,7 @@ test('Use file names relative to root', function(t) {
 
 test('Use shim config option', function(t) {
     var source = '@import "shimmed";',
-        shim = { 'shimmed': 'some/path/shimmed.css' },
+        shim = { 'shimmed': 'styles.css' },
         output = rework(source)
             .use(reworkNPM({ root: __dirname, dir: 'test', shim: shim }))
             .toString();
@@ -145,7 +145,7 @@ test('Use shim config option', function(t) {
 
 test('Use alias config option', function(t) {
     var source = '@import "tree";',
-        alias = { 'tree': './deep/tree/index.css' },
+        alias = { 'tree': './styles/index.css' },
         output = rework(source)
             .use(reworkNPM({ root: __dirname, dir: 'test', alias: alias }))
             .toString();
