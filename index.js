@@ -50,9 +50,14 @@ function resolveImports(scope, opts, style) {
 
 function resolveImport(opts, rule) {
     var name = rule.import.replace(QUOTED, ''),
-        shimPath = opts.shim ? opts.shim[name] : null;
+        shimPath = opts.shim ? opts.shim[name] : null,
+        alias = opts.alias ? opts.alias[name] : null;
     if (!isNpmImport(name)) {
         return null;
+    }
+
+    if (alias) {
+        return path.join(opts.dir, alias);
     }
 
     var options = {
