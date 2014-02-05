@@ -93,7 +93,7 @@ function getImport(scope, opts, rule) {
 
 function processPackage(shimPath) {
     return function (package) {
-        package.main = package.style || shimPath || 'index.css';
+        package.main = shimPath || package.style || 'index.css';
         return package;
     }
 }
