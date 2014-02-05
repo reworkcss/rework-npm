@@ -56,3 +56,4 @@ Valid options:
    source maps. All imported files will have file paths relative to this
    directory in the source maps. By default this uses the `dir` option.
   * `shim`: If you need to import packages that do not specify a `style` property in their `package.json` or provide their styles in `index.css`, you can provide a shim config option to access them. This is specified as a hash whose keys are the names of packages to shim and whose values are the path, relative to that package's `package.json` file, where styles can be found. e.g. `shim: {'leaflet': 'dist/leaflet.css'}`
+  * `alias`: You can provide aliases for arbitrary file paths using the same format as the `shim` option. `alias: {'tree': './deep/tree/index.css'}`
