@@ -143,3 +143,15 @@ test('Use shim config option', function(t) {
     t.equal(output, '.shimmed {\n  content: "Shimmed package";\n}');
     t.end();
 });
+
+test('Use alias config option', function(t) {
+    var source = '@import "tree";',
+        cfg = {
+            root: __dirname,
+            dir: 'test',
+            alias: {'tree': './deep/tree/index.css'}
+        },
+        output = rework(source).use(reworkNPM(cfg)).toString();
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});
