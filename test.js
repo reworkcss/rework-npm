@@ -32,6 +32,13 @@ test('Import files imported from imported package', function(t) {
     t.end();
 });
 
+test('Import file with single quotes', function(t) {
+    var source = "@import './test';",
+        output = rework(source).use(reworkNPM('test')).toString();
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});
+
 test('Import package in @media', function(t) {
     var source = [
         '@media (min-width: 320px) {',

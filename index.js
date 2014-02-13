@@ -4,7 +4,7 @@ var resolve = require('resolve'),
     fs = require('fs');
 
 var ABS_URL = /^url\(|:\/\//,
-    QUOTED = /^\"|\"$/g;
+    QUOTED = /^['"]|['"]$/g;
 
 module.exports = reworkNPM;
 
