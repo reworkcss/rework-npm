@@ -160,3 +160,13 @@ test('Use alias config option', function(t) {
     t.equal(output, '.test {\n  content: "Test file";\n}');
     t.end();
 });
+
+test('Allow whitespace-sensitive imports', function(t) {
+    var source = '@import "./styles/index-whitespace.css";',
+        output = rework(source)
+            .use(reworkNPM({ root: __dirname, dir: 'test', whitespace: true }))
+            .toString();
+
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});
