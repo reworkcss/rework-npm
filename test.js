@@ -160,3 +160,14 @@ test('Use alias config option', function(t) {
     t.equal(output, '.test {\n  content: "Test file";\n}');
     t.end();
 });
+
+test('Allow prefiltering input CSS (e.g. css-whitespace)', function(t) {
+    var source = '@import "./styles/index-unfiltered.css";',
+        replacer = function(code) { return code.replace('$replaceThis', 'content') },
+        output = rework(source)
+            .use(reworkNPM({ root: __dirname, dir: 'test', prefilter: replacer }))
+            .toString();
+
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});

@@ -63,3 +63,6 @@ Valid options:
    found. Example: `shim: {'leaflet': 'dist/leaflet.css'}`
  * `alias`: You can provide aliases for arbitrary file paths using the same
    format as the `shim` option. `alias: {'tree': './deep/tree/index.css'}`
+ * `prefilter`: If you need to prefilter input files, e.g. convert
+   whitespace-sensitive CSS to normal CSS, you can give a prefilter function.
+   Example: `prefilter: require('css-whitespace')`
