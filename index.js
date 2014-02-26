@@ -85,11 +85,15 @@ function getImport(scope, opts, rule) {
 
     var importDir = path.dirname(file),
         importOpts = { dir: importDir, root: opts.root },
-        contents = fs.readFileSync(file, 'utf8'),
-        styles = parse(opts.prefilter ? opts.prefilter(contents) : contents, {
-                position: true,
-                source: path.relative(opts.root, file)
-            }).stylesheet;
+        contents = fs.readFileSync(file, 'utf8');
+    if (opts.prefilter) {
+        contents = opts.prefilter(contents);
+    }
+
+    var styles = parse(contents, {
+            position: true,
+            source: path.relative(opts.root, file)
+        }).stylesheet;
 
     // Resolve imports in the imported file
     resolveImports(scope, importOpts, styles);
