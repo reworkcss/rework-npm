@@ -1,6 +1,6 @@
 {
   "name": "rework-npm",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Import CSS from npm modules using rework",
   "main": "index.js",
   "scripts": {
