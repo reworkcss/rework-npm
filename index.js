@@ -1,7 +1,6 @@
 var resolve = require('resolve'),
     path = require('path'),
     parse = require('css-parse'),
-    whitespace = require('css-whitespace'),
     fs = require('fs');
 
 var ABS_URL = /^url\(|:\/\//,
@@ -87,7 +86,7 @@ function getImport(scope, opts, rule) {
     var importDir = path.dirname(file),
         importOpts = { dir: importDir, root: opts.root },
         contents = fs.readFileSync(file, 'utf8'),
-        styles = parse(opts.whitespace ? whitespace(contents) : contents, {
+        styles = parse(opts.prefilter ? opts.prefilter(contents) : contents, {
                 position: true,
                 source: path.relative(opts.root, file)
             }).stylesheet;
