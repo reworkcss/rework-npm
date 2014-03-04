@@ -177,17 +177,19 @@ test('Allow prefiltering input CSS (e.g. css-whitespace)', function(t) {
 });
 
 test('Provide filename as second arg to prefilter', function(t) {
-    var source = '@import "./styles/index-unfiltered.css";\n@import "sassy";',
+    var source = '@import "sassy";',
         output = rework(source)
             .use(reworkNPM({ root: __dirname, dir: 'test', prefilter: replacer }))
             .toString();
 
-    t.equal(output, '.test {\n  content: "Test file";\n}\n\n.bashful {\n  color: red;\n}');
+    t.equal(output, '.bashful {\n  color: red;\n}');
     t.end();
 
     function replacer(code, filename) {
-        if (filename.indexOf('.scss') > 0) return sass.renderSync({data: code})
+        if (filename.indexOf('.scss') > 0) {
+            return sass.renderSync({ data: code });
+        }
 
-        return code.replace('$replaceThis', 'content');
+        return code;
     }
 });
