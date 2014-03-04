@@ -87,7 +87,7 @@ function getImport(scope, opts, rule) {
         importOpts = { dir: importDir, root: opts.root },
         contents = fs.readFileSync(file, 'utf8');
     if (opts.prefilter) {
-        contents = opts.prefilter(contents);
+        contents = opts.prefilter(contents, file);
     }
 
     var styles = parse(contents, {

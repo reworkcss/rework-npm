@@ -2,6 +2,7 @@ var test = require('tap').test,
     fs = require('fs'),
     rework = require('rework'),
     reworkNPM = require('./'),
+    sass = require('node-sass'),
     normalize = require('path').normalize;
 
 test('Import relative source file', function(t) {
@@ -171,6 +172,22 @@ test('Allow prefiltering input CSS (e.g. css-whitespace)', function(t) {
     t.end();
 
     function replacer(code) {
+        return code.replace('$replaceThis', 'content');
+    }
+});
+
+test('Provide filename as second arg to prefilter', function(t) {
+    var source = '@import "./styles/index-unfiltered.css";\n@import "sassy";',
+        output = rework(source)
+            .use(reworkNPM({ root: __dirname, dir: 'test', prefilter: replacer }))
+            .toString();
+
+    t.equal(output, '.test {\n  content: "Test file";\n}\n\n.bashful {\n  color: red;\n}');
+    t.end();
+
+    function replacer(code, filename) {
+        if (filename.indexOf('.scss') > 0) return sass.renderSync({data: code})
+
         return code.replace('$replaceThis', 'content');
     }
 });
