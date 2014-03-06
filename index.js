@@ -83,8 +83,11 @@ function getImport(scope, opts, rule) {
 
     scope[file] = true;
 
-    var importDir = path.dirname(file),
-        importOpts = { dir: importDir, root: opts.root },
+    var importOpts = {
+            dir: path.dirname(file),
+            root: opts.root,
+            prefilter: opts.prefilter
+        },
         contents = fs.readFileSync(file, 'utf8');
     if (opts.prefilter) {
         contents = opts.prefilter(contents, file);
