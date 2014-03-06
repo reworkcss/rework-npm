@@ -176,6 +176,24 @@ test('Allow prefiltering input CSS (e.g. css-whitespace)', function(t) {
     }
 });
 
+test('Prefilter nested includes', function(t) {
+    var source= '@import "./styles/nested-unfiltered.css";';
+    output = rework(source)
+        .use(reworkNPM({
+            root: __dirname,
+            dir: 'test',
+            prefilter: replacer
+        }))
+        .toString();
+
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+
+    function replacer(code) {
+        return code.replace('$replaceThis', 'content');
+    }
+});
+
 test('Provide filename as second arg to prefilter', function(t) {
     var source = '@import "sassy";',
         output = rework(source)
