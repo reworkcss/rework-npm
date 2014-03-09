@@ -33,7 +33,7 @@ output.
 var rework = require('rework'),
     reworkNPM = require('rework-npm');
 
-var output = rework('@import "test"')
+var output = rework('@import "test";')
     .use(reworkNPM())
     .toString();
 
