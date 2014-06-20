@@ -1,6 +1,6 @@
 var resolve = require('resolve'),
     path = require('path'),
-    parse = require('css-parse'),
+    parse = require('css').parse,
     fs = require('fs');
 
 var ABS_URL = /^url\(|:\/\//,
@@ -107,7 +107,7 @@ function processPackage(shimPath) {
     return function (package) {
         package.main = shimPath || package.style || 'index.css';
         return package;
-    }
+    };
 }
 
 function hasOwn(obj, prop) {
