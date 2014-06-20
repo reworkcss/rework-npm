@@ -24,12 +24,12 @@
     "url": "https://github.com/conradz/rework-npm/issues"
   },
   "devDependencies": {
-    "rework": "~0.20.1",
+    "rework": "^1.0.0",
     "tap": "~0.4.4",
     "node-sass": "^0.8.1"
   },
   "dependencies": {
     "resolve": "~0.6.1",
-    "css-parse": "~1.7.0"
+    "css": "^2.0.0"
   }
 }

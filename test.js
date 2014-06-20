@@ -48,7 +48,7 @@ test('Import package in @media', function(t) {
         '@media (min-width: 640px) {',
         '  @import "test";',
         '}'
-    ].join('\n')
+    ].join('\n');
 
     var output = rework(source).use(reworkNPM('test')).toString();
     t.equal(output, [
@@ -110,9 +110,10 @@ test('Include source maps', function(t) {
     t.equal(output,
         '.test {\n  content: "Test package";\n}\n' +
         '/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozL' +
-        'CJmaWxlIjoiZ2VuZXJhdGVkLmNzcyIsInNvdXJjZXMiOlsibm9kZV9tb2R1bGVzL3Rl' +
-        'c3QvaW5kZXguY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksdUJ' +
-        'BQXVCIn0= */');
+        'CJmaWxlIjpudWxsLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy90ZXN0L2luZGV4LmNz' +
+        'cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJIiwic291cmNlc0NvbnR' +
+        'lbnQiOlsiLnRlc3Qge1xuICAgIGNvbnRlbnQ6IFwiVGVzdCBwYWNrYWdlXCI7XG59XG' +
+        '4iXX0= */');
     t.end();
 });
 
