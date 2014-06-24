@@ -15,6 +15,7 @@ function reworkNPM(opts) {
     var root = opts.root || process.cwd();
     var prefilter = opts.prefilter || identity;
     var shim = opts.shim || {};
+    var alias = opts.alias || {};
 
     function inline(scope, style) {
         style.rules = concatMap(style.rules, function(rule) {
@@ -50,9 +51,8 @@ function reworkNPM(opts) {
             return null;
         }
 
-        var alias = opts.alias ? opts.alias[name] : null;
-        if (alias) {
-            return path.resolve(root, alias);
+        if (hasOwn(alias, name)) {
+            return path.resolve(root, alias[name]);
         }
 
         var source = rule.position.source;
