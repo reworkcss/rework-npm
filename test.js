@@ -192,6 +192,27 @@ test('Use alias config option', function(t) {
     t.end();
 });
 
+test('Import index file in aliased directory', function(t) {
+    var source = '@import "util";';
+    var alias = { 'util': 'test/styles' };
+    var output = rework(source, { source: 'test/index.css' })
+        .use(reworkNPM({ alias: alias }))
+        .toString();
+
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});
+
+test('Import file in aliased directory', function(t) {
+    var source = '@import "util/index";';
+    var alias = { 'util': 'test/styles' };
+    var output = rework(source, { source: 'test/index.css' })
+        .use(reworkNPM({ alias: alias }))
+        .toString();
+    t.equal(output, '.test {\n  content: "Test file";\n}');
+    t.end();
+});
+
 test('Allow prefiltering input CSS (e.g. css-whitespace)', function(t) {
     var input = '@import "./styles/index-unfiltered.css";';
     var output = rework(input, { source: 'test/index.css' })

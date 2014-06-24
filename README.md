@@ -49,22 +49,91 @@ console.log(output);
 
 Creates a new plugin for rework that will import files from NPM.
 
-Valid options:
+## Options
 
- * `root`: The root directory for the source files. This is used for source maps
-   to make imported file names relative to this directory, and for finding the
-   absolute path for the top level source file. Example: `root: 'src/client'`
- * `shim`: If you need to import packages that do not specify a `style`
-   property in their `package.json` or provide their styles in `index.css`,
-   you can provide a shim config option to access them. This is specified as a
-   hash whose keys are the names of packages to shim and whose values are the
-   path, relative to that package's `package.json` file, where styles can be
-   found. Example: `shim: { 'leaflet': 'dist/leaflet.css' }`
- * `alias`: You can provide aliases for arbitrary file paths using the same
-   format as the `shim` option. These files must be complete file paths,
-   relative to the `root` directory. Example:
-   `alias: { 'tree': './deep/tree/index.css' }`
- * `prefilter`: A function that will be called before an imported file is
-   parsed. This function will be called with the file contents and the full file
-   path. This option can be used to convert other languages such as SCSS to CSS
-   before importing. Example: `prefilter: function(src, file) { return src; }`
+### root
+The root directory for the source files. This is used for source maps to make
+imported file names relative to this directory, and for finding the absolute
+path for the top level source file.
+
+Example:
+
+```js
+// Uses `<dir>/src/index.css` as the file path for the top level file. Also all
+// file paths in the source map will be relative to the `<dir>/src` folder.
+rework('@import "./abc";', { source: 'index.css' })
+    .use(reworkNPM({ root: path.join(__dirname, 'src') }))
+    .toString();
+```
+
+### shim
+If you need to import packages that do not specify a `style` property in their
+`package.json` or provide their styles in `index.css`, you can provide a shim
+config option to access them. This is specified as a hash whose keys are the
+names of packages to shim and whose values are the path, relative to that
+package's `package.json` file, where styles can be found.
+
+Example:
+
+```js
+// Imports the `dist/leaflet.css` file from the `leaflet` package
+rework('@import "leaflet";', { source: 'index.css' })
+    .use(reworkNPM({ shim: { 'leaflet': 'dist/leaflet.css' } }))
+    .toString();
+```
+
+### alias
+
+You can provide aliases for arbitrary import paths, including files and
+directories. When importing a file, it will search all directories in the path
+for aliases also. Note that relative imports are never aliased.
+
+This is specified as an object where the keys are the name of the import path to
+alias, and the values are the file or directory path for the destination,
+relative to the `root` option.
+
+Example:
+
+```js
+// Imports the `styles/util.css` file
+rework('@import "util";', { source: 'index.css' })
+    .use(reworkNPM({ alias: { 'util': 'styles/util.css' } }))
+    .toString();
+```
+
+```js
+// Imports the `styles/index.css` file if there is a `styles` directory,
+// otherwise the `styles.css` file.
+rework('@import "util";', { source: 'index.css' })
+    .use(reworkNPM({ alias: { 'util': 'styles' } }))
+    .toString();
+```
+
+```js
+// Imports the `styles/other.css` file
+rework('@import "util/other";', { source: 'index.css' })
+    .use(reworkNPM({ alias: { 'util': 'styles' } }))
+    .toString();
+```
+
+### prefilter
+A function that will be called before an imported file is parsed. This function
+will be called with the file contents and the full file path. This option can be
+used to convert other languages such as SCSS to CSS before importing.
+
+Example:
+
+```js
+// Process SCSS files
+rework('@import "./some-file.scss";', { source: 'index.css' })
+    .use(reworkNPM({ prefilter: compile }))
+    .toString();
+
+function compile(src, file) {
+    if (path.extname(file) === '.scss') {
+        return compileScss(src);
+    }
+
+    return src;
+}
+```

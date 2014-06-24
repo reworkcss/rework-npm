@@ -5,8 +5,10 @@ var path = require('path');
 var parse = require('css').parse;
 var fs = require('fs');
 
-var ABS_URL = /^url\(|:\/\//,
-    QUOTED = /^['"]|['"]$/g;
+var ABS_URL = /^url\(|:\/\//;
+var QUOTED = /^['"]|['"]$/g;
+var RELATIVE = /^\./;
+var SEPARATOR = '/';
 
 module.exports = reworkNPM;
 
@@ -51,8 +53,8 @@ function reworkNPM(opts) {
             return null;
         }
 
-        if (hasOwn(alias, name)) {
-            return path.resolve(root, alias[name]);
+        if (!RELATIVE.test(name)) {
+            name = resolveAlias(name) || name;
         }
 
         var source = rule.position.source;
@@ -65,6 +67,23 @@ function reworkNPM(opts) {
         });
 
         return path.normalize(file);
+    }
+
+    function resolveAlias(name) {
+        if (hasOwn(alias, name)) {
+            return path.resolve(root, alias[name]);
+        }
+
+        var segments = name.split(SEPARATOR);
+        if (segments.length > 1) {
+            var current = segments.pop();
+            var parent = resolveAlias(segments.join(SEPARATOR));
+            if (parent) {
+                return path.join(parent, current);
+            }
+        }
+
+        return null;
     }
 
     function processPackage(pkg) {
