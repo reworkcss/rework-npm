@@ -1,9 +1,6 @@
 # rework-npm
 
-[![NPM](https://nodei.co/npm/rework-npm.png?compact=true)](https://nodei.co/npm/rework-npm/)
-
-[![Build Status](https://drone.io/github.com/conradz/rework-npm/status.png)](https://drone.io/github.com/conradz/rework-npm/latest)
-[![Dependency Status](https://david-dm.org/conradz/rework-npm.png)](https://david-dm.org/conradz/rework-npm)
+[![Build Status](https://travis-ci.org/conradz/rework-npm.svg?branch=master)](https://travis-ci.org/conradz/rework-npm)
 
 Import CSS styles from NPM modules using
 [rework](https://github.com/visionmedia/rework).
