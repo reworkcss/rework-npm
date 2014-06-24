@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/conradz/rework-npm.git"
+    "url": "https://github.com/reworkcss/rework-npm.git"
   },
   "keywords": [
     "rework",
@@ -21,7 +21,7 @@
   "author": "Conrad Zimmerman <me@conradz.com>",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/conradz/rework-npm/issues"
+    "url": "https://github.com/reworkcss/rework-npm/issues"
   },
   "devDependencies": {
     "convert-source-map": "^0.3.4",

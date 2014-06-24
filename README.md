@@ -1,9 +1,9 @@
 # rework-npm
 
-[![Build Status](https://travis-ci.org/conradz/rework-npm.svg?branch=master)](https://travis-ci.org/conradz/rework-npm)
+[![Build Status](https://travis-ci.org/reworkcss/rework-npm.svg?branch=master)](https://travis-ci.org/conradz/rework-npm)
 
 Import CSS styles from NPM modules using
-[rework](https://github.com/visionmedia/rework).
+[rework](https://github.com/reworkcss/rework).
 
 This lets you use `@import` CSS using the same rules you use for `require` in
 Node. Specify the CSS file for a module using the `style` field in
