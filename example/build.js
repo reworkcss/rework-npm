@@ -1,14 +1,14 @@
-var rework = require('rework'),
-    npm = require('../'),
-    fs = require('fs'),
-    path = require('path');
+var rework = require('rework');
+var reworkNpm = require('../');
+var fs = require('fs');
+var path = require('path');
 
-var file = path.join(__dirname, 'main.css'),
-    outFile = path.join(__dirname, 'compiled.css'),
-    source = fs.readFileSync(file, 'utf8'),
-    opts = { source: path.relative(__dirname, file) },
-    output = rework(source, opts)
-        .use(npm(__dirname))
-        .toString({ sourcemap: true });
+var entry = path.join(__dirname, 'main.css');
+var outFile = path.join(__dirname, 'compiled.css');
+
+var input = fs.readFileSync(entry, 'utf8');
+var output = rework(input, { source: path.relative(__dirname, entry) })
+    .use(reworkNpm())
+    .toString({ sourcemap: true });
 
 fs.writeFileSync(outFile, output, 'utf8');

@@ -27,13 +27,19 @@ debugging in a browser. To include inline source maps, use
 `.toString({ sourcemap: true })` on the rework object when generating the
 output.
 
+Note that to get correct import paths you must set the `source` option to the
+source file name when parsing the CSS source (usually with rework). If the
+`source` path is relative, it is resolved to the `root` option (defaults to the
+current directory). The `source` path is used to find the directory to start in
+when finding dependencies.
+
 ## Example
 
 ```js
 var rework = require('rework'),
     reworkNPM = require('rework-npm');
 
-var output = rework('@import "test";')
+var output = rework('@import "test";', { source: 'my-file.css' })
     .use(reworkNPM())
     .toString();
 
@@ -46,23 +52,22 @@ console.log(output);
 
 Creates a new plugin for rework that will import files from NPM.
 
-If `opts` is a string, it is used as the `dir` option.
-
 Valid options:
 
- * `dir`: The directory where the source file is located. If not specified, it
-   uses the current directory.
- * `root`: The directory where all source files are located. This is used for
-   source maps. All imported files will have file paths relative to this
-   directory in the source maps. By default this uses the `dir` option.
+ * `root`: The root directory for the source files. This is used for source maps
+   to make imported file names relative to this directory, and for finding the
+   absolute path for the top level source file. Example: `root: 'src/client'`
  * `shim`: If you need to import packages that do not specify a `style`
    property in their `package.json` or provide their styles in `index.css`,
    you can provide a shim config option to access them. This is specified as a
    hash whose keys are the names of packages to shim and whose values are the
    path, relative to that package's `package.json` file, where styles can be
-   found. Example: `shim: {'leaflet': 'dist/leaflet.css'}`
+   found. Example: `shim: { 'leaflet': 'dist/leaflet.css' }`
  * `alias`: You can provide aliases for arbitrary file paths using the same
-   format as the `shim` option. `alias: {'tree': './deep/tree/index.css'}`
- * `prefilter`: If you need to prefilter input files, e.g. convert
-   whitespace-sensitive CSS to normal CSS, you can give a prefilter function.
-   Example: `prefilter: require('css-whitespace')`
+   format as the `shim` option. These files must be complete file paths,
+   relative to the `root` directory. Example:
+   `alias: { 'tree': './deep/tree/index.css' }`
+ * `prefilter`: A function that will be called before an imported file is
+   parsed. This function will be called with the file contents and the full file
+   path. This option can be used to convert other languages such as SCSS to CSS
+   before importing. Example: `prefilter: function(src, file) { return src; }`
