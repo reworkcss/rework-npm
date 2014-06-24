@@ -1,6 +1,6 @@
 # rework-npm
 
-[![Build Status](https://travis-ci.org/reworkcss/rework-npm.svg?branch=master)](https://travis-ci.org/conradz/rework-npm)
+[![Build Status](https://travis-ci.org/reworkcss/rework-npm.svg?branch=master)](https://travis-ci.org/reworkcss/rework-npm)
 
 Import CSS styles from NPM modules using
 [rework](https://github.com/reworkcss/rework).
