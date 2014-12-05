@@ -3,6 +3,7 @@ var reworkNPM = require('./');
 var fs = require('fs');
 var path = require('path');
 var rework = require('rework');
+var parse = require('css').parse;
 var sass = require('node-sass');
 var convertSourceMap = require('convert-source-map');
 var SourceMapConsumer = require('source-map').SourceMapConsumer;
@@ -253,4 +254,35 @@ test('Provide filename as second arg to prefilter', function(t) {
             ? sass.renderSync({ data: code })
             : code;
     }
+});
+
+test('Use cached rules if cache provided', function(t) {
+    var cachedContents = '.test {\n  content: "Cached package";\n}';
+
+    var cache = {};
+    cache[path.resolve('test/node_modules/test/index.css')] = parse(cachedContents, { source: 'test/index.css' }).stylesheet.rules;
+
+    var input = '@import "test";';
+    var output = rework(input, { source: 'test/index.css' })
+            .use(reworkNPM({ cache: cache }))
+            .toString();
+    t.equal(output, cachedContents);
+
+    t.end();
+});
+
+test('Caches parsed output if cache provided', function(t) {
+    var cache = {};
+    var input = '@import "test";';
+    var output = rework(input, { source: 'test/index.css' })
+            .use(reworkNPM({ cache: cache }))
+            .toString();
+
+    t.equal(output, '.test {\n  content: "Test package";\n}');
+
+    var resolvedPath = path.resolve('test/node_modules/test/index.css');
+    t.ok(cache[resolvedPath]);
+    t.type(cache[resolvedPath], "object");
+
+    t.end();
 });
