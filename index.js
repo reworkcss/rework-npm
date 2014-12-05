@@ -18,6 +18,7 @@ function reworkNPM(opts) {
     var prefilter = opts.prefilter || identity;
     var shim = opts.shim || {};
     var alias = opts.alias || {};
+    var cache = opts.cache || null;
 
     function inline(scope, style) {
         style.rules = concatMap(style.rules, function(rule) {
@@ -41,10 +42,19 @@ function reworkNPM(opts) {
         }
         scope.push(file);
 
+        if (cache && cache.hasOwnProperty(file)) {
+            return cache[file];
+        }
+
         var contents = fs.readFileSync(file, 'utf8');
         contents = prefilter(contents, file);
         contents = parse(contents, { source: path.relative(root, file) });
-        return inline(scope, contents.stylesheet).rules;
+
+        var rules = inline(scope, contents.stylesheet).rules;
+        if (cache) {
+            cache[file] = rules;
+        }
+        return rules;
     }
 
     function resolveImport(rule) {

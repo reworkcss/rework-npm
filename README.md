@@ -137,3 +137,30 @@ function compile(src, file) {
     return src;
 }
 ```
+
+### cache
+An object that will be used as a cache for parsed output of import files, indexed by absolute file path.
+This option may be useful when integrating rework with a watcher by avoiding unnecessary parsing of unchanged files.
+
+Example:
+
+```js
+var cache = {};
+
+function buildCss() {
+    // When './abc' is resolved, the cache will be checked
+    // first. If not cached, the parsed output will be added
+    // to the cache.
+    rework('@import "./abc";', { source: 'index.css' })
+        .use(reworkNPM({ cache: cache }))
+        .toString();
+}
+
+// Triggered by a watcher, perhaps
+function onCssFileChanged(file) {
+    // A css file has changed, so remove it from the cache
+    // and run rework again.
+    delete cache[path.resolve(file)];
+    buildCss();
+}
+```
