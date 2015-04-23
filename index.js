@@ -89,7 +89,7 @@ function reworkNPM(opts) {
     function processPackage(pkg) {
         pkg.main =
             (hasOwn(shim, pkg.name) && shim[pkg.name]) ||
-            pkg.style || 'index.css';
+            pkg.style || pkg.main || 'index.css';
         return pkg;
     }
 
